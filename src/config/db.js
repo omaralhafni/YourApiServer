@@ -9,7 +9,7 @@ const connectDB = async () => {
     });
     console.log(
       "MongoDB connected: ",
-      connection.connection.host.cyan.underline
+      connection.connection.host
     );
   } catch (error) {
     console.error(`Error : ${error.message}`.red.underline.bold);

@@ -1,0 +1,608 @@
+{
+  "info": {
+    "version": "1.0.0",
+    "title": "MYouApi",
+    "description": "Offers you an api for personal use and training"
+  },
+  "swagger": "2.0",
+  "paths": {
+    "/v1/users/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login user to the system",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Login User Object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserLogin"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserSuccessLogin"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          },
+          "401": {
+            "description": "Invalid email or password"
+          }
+        }
+      }
+    },
+    "/v1/users/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register user to the system",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Register User Object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserRegister"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserSuccessRegister"
+            }
+          },
+          "400": {
+            "description": "Username already exists try another one. \n || Email already exists. \n || Invalid user data. \n || Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/v1/users/profile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get User Profile",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Bearer Token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserProfileData"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Update User Profile",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Update profile body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateProfileReq"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Bearer Token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UpdateProfileSuccess"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        }
+      }
+    },
+    "/v1/products/{userId}": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Fetch All Products For User",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/FetchProductSuccess"
+            }
+          },
+          "404": {
+            "description": "There is no data for this user"
+          }
+        }
+      }
+    },
+    "/v1/products": {
+      "post": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Create a Product",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Product Details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Bearer Token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "OK, Product details",
+            "schema": {
+              "$ref": "#/definitions/SuccessProduct"
+            }
+          },
+          "400": {
+            "description": "Failed. Bad post data."
+          }
+        }
+      }
+    },
+    "/v1/products/{productId}": {
+      "put": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Update Product Details",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Product Details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Product"
+            }
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Bearer Token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/SuccessProduct"
+            }
+          },
+          "400": {
+            "description": "Product not found. \n || Failed. Bad post data."
+          },
+          "401": {
+            "description": "You are not authorized to update this item."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Delete Product",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "Product Id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "authorization",
+            "description": "Bearer Token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Product deleted successfully."
+          },
+          "400": {
+            "description": "Product not found. \n || Failed. Bad post data."
+          },
+          "401": {
+            "description": "You are not authorized to update this item."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "UserLogin": {
+      "type": "object",
+      "required": [
+        "email",
+        "password"
+      ],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "UserRegister": {
+      "type": "object",
+      "required": [
+        "userName",
+        "firstName",
+        "lastName",
+        "email",
+        "password",
+        "passwordConfirmation"
+      ],
+      "properties": {
+        "userName": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "passwordConfirmation": {
+          "type": "string"
+        }
+      }
+    },
+    "UserProfileData": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "profileImage": {
+          "type": "string"
+        },
+        "dateOfBirth": {
+          "type": "string"
+        },
+        "isAdmin": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateProfileReq": {
+      "type": "object",
+      "properties": {
+        "userName": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "profileImage": {
+          "type": "string"
+        },
+        "dateOfBirth": {
+          "type": "string"
+        }
+      }
+    },
+    "UpdateProfileSuccess": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "profileImage": {
+          "type": "string"
+        },
+        "dateOfBirth": {
+          "type": "string"
+        },
+        "isAdmin": {
+          "type": "boolean"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "UserSuccessLogin": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "UserSuccessRegister": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "profileImage": {
+          "type": "string"
+        },
+        "dateOfBirth": {
+          "type": "string"
+        },
+        "isAdmin": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "FetchProductSuccess": {
+      "type": "object",
+      "properties": {
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string"
+              },
+              "userName": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "profileImage": {
+                "type": "string"
+              },
+              "dateOfBirth": {
+                "type": "string"
+              },
+              "isAdmin": {
+                "type": "string"
+              },
+              "token": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "page": {
+          "type": "number"
+        },
+        "pages": {
+          "type": "number"
+        },
+        "total": {
+          "type": "number"
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "required": [
+        "name",
+        "images",
+        "description",
+        "category"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "imageBanner": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        }
+      }
+    },
+    "SuccessProduct": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "imageBanner": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "date"
+        },
+        "updatedAt": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}
