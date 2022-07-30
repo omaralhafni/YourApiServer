@@ -12,7 +12,7 @@ import {
   generateWebToken,
   HttpNotFoundRequest,
   updateProfileSchema
-} from "../utils";
+} from "../utils/index.js";
 
 
 // @desc Login to the system
@@ -30,7 +30,7 @@ export const loginUser = expressAsyncHandler(async (req, res) => {
     if (user && (await user.matchPassword(password))) {
       res.status(HttpStatus.OK).json(
         getUserObject(user, {
-          token: generateWebToken(user._id),
+          token: generateWebToken(user),
         })
       );
 
@@ -69,7 +69,7 @@ export const registerUser = expressAsyncHandler(async (req, res) => {
     if (user) {
       res.status(HttpStatus.CREATED).json(
         getUserObject(user, {
-          token: generateWebToken(user._id),
+          token: generateWebToken(user),
         })
       );
     } else {
@@ -111,7 +111,7 @@ export const updateUserProfile = expressAsyncHandler(async (req, res) => {
       const updatedUser = await (helperUpdateUser(req.body, user)).save();
       res.status(HttpStatus.OK).json(
         getUserObject(updatedUser, {
-          token: generateWebToken(updatedUser._id),
+          token: generateWebToken(updatedUser),
         })
       );
     } else {

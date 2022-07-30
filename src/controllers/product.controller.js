@@ -10,19 +10,27 @@ import {
   updateProductSchema,
   helperCreateProducts,
   helperUpdateProducts
-} from "../utils";
+} from "../utils/index.js";
 
 // @desc Fetch all products for user
-// @route GET v1/products/:userId
+// @route GET v1/products/:userName
 // @access Public
 export const getAllProductsForUser = expressAsyncHandler(async (req, res) => {
-  const { userId } = req.params;
+  const { userName } = req.params;
   const pageSize = 12;
   const page = Number(req.query.pageNumber) || 1;
+  const keyword = req.query.keyword
+    ? {
+      name: {
+        $regex: req.query.keyword,
+        $options: "i",
+      },
+    }
+    : {}
 
   try {
-    const total = await Product.countDocuments({ userId: userId });
-    const products = await Product.find({ userId: userId })
+    const total = await Product.countDocuments({ $and: [{ userName }, { ...keyword }] });
+    const products = await Product.find({ $and: [{ userName }, { ...keyword }] })
       .limit(pageSize)
       .skip(pageSize * (page - 1));
 
@@ -34,6 +42,19 @@ export const getAllProductsForUser = expressAsyncHandler(async (req, res) => {
   }
 }
 );
+
+// @desc Fetch a single product
+// @route Get v1/products/:id
+// @access Public
+export const getProductByIDForUser = expressAsyncHandler(async (req, res) => {
+  console.log('start');
+  console.log('start1', req.params.productId);
+  const product = await Product.findById(req.params.productId);
+  if (product) res.status(HttpStatus.OK).json(product);
+  else {
+    throw new HttpNotFoundRequest("Product not found");
+  }
+});
 
 // @desc Create a product
 // @route POST v1/products
@@ -58,12 +79,12 @@ export const createProduct = expressAsyncHandler(async (req, res) => {
 export const updateProductForUser = expressAsyncHandler(async (req, res) => {
   try {
     const { productId } = req.params;
-    const { _id } = req.user;
+    const { userName } = req.user;
     await validator(updateProductSchema, req.body);
     const product = await Product.findById(productId);
 
     if (product) {
-      if (String(product.userId) == String(_id)) {
+      if (String(product.userName) == String(userName)) {
         const updatedProduct = await (helperUpdateProducts(req.body, product)).save();
         res.status(HttpStatus.OK).json(updatedProduct);
 
@@ -84,11 +105,11 @@ export const updateProductForUser = expressAsyncHandler(async (req, res) => {
 export const deleteProductForUser = expressAsyncHandler(async (req, res) => {
   try {
     const { productId } = req.params;
-    const { _id } = req.user;
+    const { userName } = req.user;
     const product = await Product.findById(productId);
 
     if (product) {
-      if (String(product.userId) == String(_id)) {
+      if (String(product.userName) == String(userName)) {
         await product.remove();
 
         res.status(HttpStatus.OK).json({

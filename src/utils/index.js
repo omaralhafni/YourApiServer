@@ -21,7 +21,7 @@ import {
     generateWebToken,
     helperCreateProducts,
     helperUpdateProducts
-} from "./helper";
+} from "./helper/index.js";
 
 export {
     validator,

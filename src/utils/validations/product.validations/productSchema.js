@@ -9,7 +9,7 @@ export const addProductSchema = yup.object().shape({
     .array()
     .of(yup.string())
     .min(1, "Images should be one at least")
-    .max(7, "Images max is 7")
+    .max(5, "Images max is 5")
     .required("Images is required"),
   imageBanner: yup.string(),
   description: yup

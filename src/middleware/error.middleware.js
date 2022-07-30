@@ -1,4 +1,4 @@
-import { HttpNotFoundRequest } from "../utils";
+import { HttpNotFoundRequest } from "../utils/index.js";
 
 export const notFound = (req, res, next) => {
   throw new HttpNotFoundRequest(`Not Found - ${req.originalUrl}`);
@@ -19,24 +19,3 @@ export const errorHandler = (error, req, res, next) => {
     next(error);
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

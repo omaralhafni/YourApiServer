@@ -1,7 +1,7 @@
-import Product from "../../../models/product.model";
+import Product from "../../../models/product.model.js";
 
 export const helperCreateProducts = (data, user) => {
-    const { _id } = user;
+    const { userName } = user;
     const {
         name,
         images,
@@ -11,7 +11,7 @@ export const helperCreateProducts = (data, user) => {
     } = data;
 
     const product = new Product({
-        userId: _id, name, images, imageBanner, description, category
+        userName, name, images, imageBanner, description, category
     });
 
     return product;
@@ -26,7 +26,7 @@ export const helperUpdateProducts = (data, product) => {
         category
     } = data
 
-    product.userId = product.userId;
+    product.userName = product.userName;
     product.name = name || product.name;
     product.images = images || product.images;
     product.imageBanner = imageBanner || product.imageBanner;

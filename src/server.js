@@ -22,69 +22,51 @@ const swaggerDocument = require("./swagger.json");
 
 const app = express();
 
-// // Access control & connect middleware
-// app.use(cors());
+// Access control & connect middleware
+app.use(cors());
 
-// // Module that loads environment variables from a .env
-// dotenv.config();
+// Module that loads environment variables from a .env
+dotenv.config();
 
-// // Connecting to the database
-// connectDB();
+// Connecting to the database
+connectDB();
 
-// // Middleware to limit repeated requests 
-// app.use(
-//   rateLimit({
-//     windowMs: 60 * 1000,
-//     max: 10,
-//     skipSuccessfulRequests: false,
-//   })
-// );
+// Middleware to limit repeated requests 
+app.use(
+  rateLimit({
+    windowMs: 60 * 1000,
+    max: 20,
+    skipSuccessfulRequests: false,
+  })
+);
 
-// // logger middleware
-// if (process.env.NODE_ENV === "development") {
-//   app.use(morgan("dev"));
-// }
+// logger middleware
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+}
 
-// // To remove data that contains forbidden characters
-// app.use(mongoSanitize());
+// To remove data that contains forbidden characters
+app.use(mongoSanitize());
 
-// app.use(express.json({}));
+app.use(express.json({}));
 
-// // Swagger document
-// app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-// // route
-// app.use("/v1/users", userRoutes);
-// app.use("/v1/products", productRouter);
-// app.use("/v1/upload", uploadRoutes);
+// Swagger document
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// route
+app.use("/v1/users", userRoutes);
+app.use("/v1/products", productRouter);
 
-// const __dirname = path.resolve();
-// // upload route
-// app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
-
-// if (process.env.NODE_ENV == "production") {
-//   app.use(express.static(path.join(__dirname, "/frontend/build")));
-//   app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
-//   });
-// } else {
-//   app.get("/");
-// }
+app.use("/v1/upload", uploadRoutes);
 
 
-// // Handle route Not found
-// app.use(notFound);
-// // Handle unknown error
-// app.use(errorHandler);
+// Handle route Not found
+app.use(notFound);
+// Handle unknown error
+app.use(errorHandler);
 
 // port
 const port = process.env.PORT || 5050;
 
-app.get("health", (res, req) => {
-  res.status(200).send({
-    "done": 'msg'
-  })
-
-})
 // listen for application
 app.listen(
   port,
