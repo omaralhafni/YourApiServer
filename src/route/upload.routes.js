@@ -6,10 +6,12 @@ const router = express.Router();
 
 import { v2 as cloudinary } from 'cloudinary'
 
+const { CLOUD_NAME, API_KEY, API_SECRET } = process.env
+
 cloudinary.config({
-  cloud_name: 'dodcn2kmk',
-  api_key: '846415349151557',
-  api_secret: 'pmR9HWghtGj2GsD1MG08enetc4A',
+  cloud_name: CLOUD_NAME,
+  api_key: API_KEY,
+  api_secret: API_SECRET,
   secure: true
 });
 
